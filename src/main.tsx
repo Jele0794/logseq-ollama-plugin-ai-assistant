@@ -78,7 +78,15 @@ function main() {
         }
 
         const input = await prompt.format({ content });
-        const message = await model.invoke(input);
+
+        let message;
+        try {
+          message = await model.invoke(input);
+        }
+        catch (e) {
+          logseq.Editor.updateBlock(newBlock.uuid, `🤖 Error: \`${e}\``);
+          return;
+        }
         // only accept text response for now
         const response = message.content.toString()
 
