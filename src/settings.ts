@@ -14,25 +14,18 @@ export interface ISettings {
 
 const settings: SettingSchemaDesc[] = [
   {
-    key: 'apiKey',
-    type: 'string',
-    title: 'API Key',
-    description: 'Enter your OpenAI API key.',
-    default: '',
-  },
-  {
     key: 'basePath',
     type: 'string',
     title: 'openApi basePath',
     description: 'Enter your openApi proxy basePath',
-    default: 'https://api.openai.com/v1',
+    default: 'http://localhost:11434',
   },
   {
     key: 'model',
     type: 'string',
     title: 'Model',
-    description: 'Choose the OpenAI model (e.g., "gpt-3.5-turbo").',
-    default: 'gpt-3.5-turbo',
+    description: 'Choose the model (e.g., "llama3").',
+    default: 'llama3',
   },
   {
     key: 'tag',

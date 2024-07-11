@@ -1,0 +1,13 @@
+src/
+
+pnpm-lock.yaml 
+postcss.config.js 
+readme.md 
+release.config.js 
+renovate.json
+tailwind.config.js 
+tsconfig.json 
+vite.config.ts
+CHANGELOG.md
+index.html
+temp

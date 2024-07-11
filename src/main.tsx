@@ -1,6 +1,6 @@
 import '@logseq/libs';
-import { ChatOpenAI } from '@langchain/openai';
-import { PromptTemplate } from 'langchain/prompts';
+import { ChatOllama } from '@langchain/community/chat_models/ollama';
+import { PromptTemplate } from '@langchain/core/prompts';
 import {
   CustomListOutputParser,
   StructuredOutputParser,
@@ -21,7 +21,6 @@ function getPrompts() {
 
 function main() {
   const {
-    apiKey,
     basePath,
     model: modelName,
     tag: tagName,
@@ -29,14 +28,10 @@ function main() {
   const tag = tagName ? ` #${tagName}` : '';
 
   const prompts = getPrompts();
-  const model = new ChatOpenAI(
-    {
-      openAIApiKey: apiKey,
-      modelName,
-      streaming: false,
-    },
-    { basePath },
-  );
+  const model = new ChatOllama({
+    baseUrl: basePath, // Default value
+    model: modelName, // Default value
+  });
 
   prompts.map(({ name, prompt: t, output, format }: IPrompt) => {
     logseq.Editor.registerSlashCommand(
@@ -76,6 +71,12 @@ function main() {
             inputVariables: ['content'],
           });
 
+
+        const newBlock = await logseq.Editor.insertBlock(uuid, '🤖 Generating...');
+        if (newBlock == null) {
+          return;
+        }
+
         const input = await prompt.format({ content });
         const message = await model.invoke(input);
         // only accept text response for now
@@ -104,24 +105,24 @@ function main() {
           }
           case PromptOutputType.insert: {
             if (!parser) {
-              await logseq.Editor.insertBlock(uuid, `${response}${tag}`);
+              await logseq.Editor.updateBlock(newBlock.uuid, `${response}${tag}`);
             } else if (structured) {
               const record = await parser.parse(response);
               await logseq.Editor.updateBlock(
-                uuid,
+                newBlock.uuid,
                 `${block?.content}${tag}\n`,
               );
               for await (const [key, value] of Object.entries(record)) {
-                await logseq.Editor.insertBlock(uuid, `${key}: ${value}`);
+                await logseq.Editor.insertBlock(newBlock.uuid, `${key}: ${value}`);
               }
             } else if (listed) {
               await logseq.Editor.updateBlock(
-                uuid,
+                newBlock.uuid,
                 `${block?.content}${tag}\n`,
               );
               const record = (await parser.parse(response)) as string[];
               for await (const item of record) {
-                await logseq.Editor.insertBlock(uuid, item);
+                await logseq.Editor.insertBlock(newBlock, item);
               }
             }
             break;
