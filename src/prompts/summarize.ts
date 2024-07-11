@@ -8,5 +8,5 @@ export const Summarize: IPrompt = {
     {content}
     """
   `,
-  output: PromptOutputType.property,
+  output: PromptOutputType.insert,
 };

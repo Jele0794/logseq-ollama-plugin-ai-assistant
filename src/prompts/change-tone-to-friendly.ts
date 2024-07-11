@@ -8,5 +8,5 @@ export const ChangeToneToFriendly: IPrompt = {
     {content}
     """
   `,
-  output: PromptOutputType.replace,
+  output: PromptOutputType.insert,
 };
