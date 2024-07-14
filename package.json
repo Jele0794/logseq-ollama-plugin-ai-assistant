@@ -45,7 +45,7 @@
   },
   "logseq": {
     "id": "logseq-ollama-plugin-ai-assistant",
-    "title": "AI Assistant",
+    "title": "Ollama AI Assistant",
     "icon": "./logo.svg"
   }
 }
