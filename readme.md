@@ -1,8 +1,6 @@
 # Logseq AI Assistant
 
-A powerful tool that enhances your Logseq experience by allowing you to interact with AI models like OpenAI's `gpt-3.5-turbo`.
-
-<a href="https://www.buymeacoffee.com/yuexunjiang"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=yuexunjiang&button_colour=FFDD00&font_colour=000000&font_family=Comic&outline_colour=000000&coffee_colour=ffffff" /></a>
+A powerful tool that enhances your Logseq experience by allowing you to interact with local AI models like Meta's `llama3` thanks to [Ollama](https://ollama.com/).
 
 With this plugin, you can effortlessly generate or transform text using custom prompts,
 enabling you to achieve more efficient and creative workflows within Logseq.
@@ -15,23 +13,21 @@ enabling you to achieve more efficient and creative workflows within Logseq.
 - Seamless integration with Logseq
 - Customizable prompt support
 - Easy-to-use built-in prompts 
-- Using a custom Open AI basePath
+- Using a custom AI models running locally (and privately) with Ollama.
 
 ## Install
 
-### Option 1: directly install via Marketplace
+### Manually load
 
-### Option 2: manually load
-
-- turn on Logseq developer mode
-- [download the prebuilt package here](https://github.com/ahonn/logseq-plugin-ai-assistant/releases)
-- unzip the zip file and load from Logseq plugins page
+- [Download and Install Ollama from here](https://ollama.com/download).
+- Turn on Logseq developer mode.
+- [Download the prebuilt package here](https://github.com/ahonn/logseq-plugin-ai-assistant/releases).
+- Unzip the zip file and load from Logseq plugins page
 
 ## Configuration
 Before using the plugin, you need to configure it according to your preferences.
 
-- **API Key**: Enter your OpenAI API key in this field. If you don't have an API key yet, visit the [OpenAI](https://platform.openai.com/account/api-keys) to obtain one.
-- **Model**: Choose the OpenAI model you want to use, such as "gpt-3.5-turbo". Different models may offer varying levels of performance and text generation capabilities.
+- **Model**: Choose the model you want to use, such as "llama3", "mistral", etc. Different models may offer varying levels of performance and text generation capabilities. You can see Ollama's library of available models [here](https://ollama.com/library).
 - **Custom Prompts**: Enable this option if you want to use custom prompts for generating or transforming text. You can add, edit, or remove prompts in the prompts array.
 
 ## Built-in Prompts
@@ -48,8 +44,9 @@ The plugin comes with several built-in prompts to enhance your text editing expe
 - **Change Tone to Professional**: Rewrite the text with a more professional tone.
 - **Explain This**: Provide a clear explanation for the text or code snippet.
 - **Generate Ideas**: Generate creative ideas related to the selected topic.
+- **eli5**: Explain me like I'm 5, will simplify and explain complex ideas or concepts.
 
-See all built-in prompts [here](https://github.com/ahonn/logseq-plugin-ai-assistant/tree/master/src/prompts)
+See all built-in prompts [here](https://github.com/Jele0794/logseq-plugin-ai-assistant/tree/master/src/prompts)
 
 ## How to Use a Custom Prompt
 
@@ -59,8 +56,7 @@ See all built-in prompts [here](https://github.com/ahonn/logseq-plugin-ai-assist
 
 ```json
 {
-  "apiKey": "<your-api-key>",
-  "model": "gpt-3.5-turbo",
+  "model": "llama3",
   "customPrompts": {
     "enable": true, // <- Make sure to enable this.
     "prompts": [
