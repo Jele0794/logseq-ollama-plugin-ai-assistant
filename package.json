@@ -1,6 +1,6 @@
 {
   "name": "logseq-ollama-plugin-ai-assistant",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "dist/index.html",
   "scripts": {
     "dev": "vite",
@@ -45,7 +45,7 @@
   },
   "logseq": {
     "id": "logseq-ollama-plugin-ai-assistant",
-    "title": "AI Assistant",
+    "title": "Ollama AI Assistant",
     "icon": "./logo.svg"
   }
 }
