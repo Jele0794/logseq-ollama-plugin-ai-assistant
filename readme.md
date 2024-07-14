@@ -46,7 +46,7 @@ The plugin comes with several built-in prompts to enhance your text editing expe
 - **Generate Ideas**: Generate creative ideas related to the selected topic.
 - **eli5**: Explain me like I'm 5, will simplify and explain complex ideas or concepts.
 
-See all built-in prompts [here](https://github.com/Jele0794/logseq-plugin-ai-assistant/tree/master/src/prompts)
+See all built-in prompts [here](https://github.com/Jele0794/logseq-ollama-plugin-ai-assistant/tree/master/src/prompts)
 
 ## How to Use a Custom Prompt
 
