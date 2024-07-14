@@ -1,9 +1,9 @@
 import { IPrompt, PromptOutputType } from './type';
 
-export const Summarize: IPrompt = {
-  name: 'Summarize',
+export const ELI5: IPrompt = {
+  name: 'ELI5',
   prompt: `
-    Please provide a concise summary of the following text:
+    Please explain me the following text as if I was a 5 year old kid:
     """
     {content}
     """

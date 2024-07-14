@@ -8,3 +8,4 @@ export * from './generate-ideas';
 export * from './make-longer';
 export * from './make-shorter';
 export * from './summarize';
+export * from './eli5';

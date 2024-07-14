@@ -8,5 +8,5 @@ export const makeLonger: IPrompt = {
     {content}
     """
   `,
-  output: PromptOutputType.replace,
+  output: PromptOutputType.insert,
 };

@@ -8,5 +8,5 @@ export const ChangeToneToConfident: IPrompt = {
     {content}
     """
   `,
-  output: PromptOutputType.replace,
+  output: PromptOutputType.insert,
 };
