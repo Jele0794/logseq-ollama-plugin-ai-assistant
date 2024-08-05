@@ -130,7 +130,7 @@ function main() {
               );
               const record = (await parser.parse(response)) as string[];
               for await (const item of record) {
-                await logseq.Editor.insertBlock(newBlock, item);
+                await logseq.Editor.insertBlock(newBlock.uuid, item);
               }
             }
             break;
