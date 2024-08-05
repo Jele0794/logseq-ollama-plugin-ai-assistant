@@ -16,3 +16,7 @@ export async function getBlockContent(block: BlockEntity, parentBlock = true, le
 
   return content;
 }
+
+export function wrapInQuote(content: string) {
+  return `#+BEGIN_QUOTE\n${content}\n#+END_QUOTE`
+}
