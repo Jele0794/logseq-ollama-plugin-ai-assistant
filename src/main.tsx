@@ -8,7 +8,7 @@ import {
 import * as presetPrompts from './prompts';
 import { IPrompt, PromptOutputType } from './prompts/type';
 import settings, { ISettings } from './settings';
-import { getBlockContent } from './utils';
+import { getBlockContent, wrapInQuote } from './utils';
 
 function getPrompts() {
   const { customPrompts } = logseq.settings as unknown as ISettings;
@@ -92,33 +92,37 @@ function main() {
 
         switch (output) {
           case PromptOutputType.property: {
-            let content = `${block?.content}${tag}\n`;
+            let content = `${tag} | ${block?.content}\n`;
 
+            const propertyName = `ai-${name.toLowerCase().replace(/[\s\W]/g, '-')}`;
             if (!parser) {
-              content += `${name.toLowerCase()}:: ${response}`;
+              let cleanPropertyResponse = response.replaceAll('\n', ' ');
+              cleanPropertyResponse = cleanPropertyResponse.replaceAll('**', '*');
+              content += `${propertyName}:: ${cleanPropertyResponse}`;
             } else if (structured) {
-              content += `${name.toLowerCase()}:: `;
+              content += `${propertyName}:: `;
               const record = await parser.parse(response);
               content += Object.entries(record)
                 .map(([key, value]) => `${key}: ${value}`)
                 .join(' ');
             } else if (listed) {
-              content += `${name.toLowerCase()}:: `;
+              content += `${propertyName}:: `;
               const list = (await parser.parse(response)) as string[];
               content += list.join(', ');
             }
 
             await logseq.Editor.updateBlock(uuid, content);
+            await logseq.Editor.removeBlock(newBlock.uuid)
             break;
           }
           case PromptOutputType.insert: {
             if (!parser) {
-              await logseq.Editor.updateBlock(newBlock.uuid, `${response}${tag}`);
+              await logseq.Editor.updateBlock(newBlock.uuid, `${tag}\n${wrapInQuote(response)}`);
             } else if (structured) {
               const record = await parser.parse(response);
               await logseq.Editor.updateBlock(
                 newBlock.uuid,
-                `${block?.content}${tag}\n`,
+                `${tag} | ${block?.content}\n`,
               );
               for await (const [key, value] of Object.entries(record)) {
                 await logseq.Editor.insertBlock(newBlock.uuid, `${key}: ${value}`);
@@ -126,17 +130,18 @@ function main() {
             } else if (listed) {
               await logseq.Editor.updateBlock(
                 newBlock.uuid,
-                `${block?.content}${tag}\n`,
+                `${tag} | ${block?.content}\n`,
               );
               const record = (await parser.parse(response)) as string[];
               for await (const item of record) {
-                await logseq.Editor.insertBlock(newBlock, item);
+                await logseq.Editor.insertBlock(newBlock.uuid, item);
               }
             }
             break;
           }
           case PromptOutputType.replace:
-            await logseq.Editor.updateBlock(uuid, `${response}${tag}`);
+            await logseq.Editor.updateBlock(uuid, `${tag}\n${response}`);
+            await logseq.Editor.removeBlock(newBlock.uuid)
             break;
         }
       },

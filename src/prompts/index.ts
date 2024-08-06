@@ -9,3 +9,5 @@ export * from './make-longer';
 export * from './make-shorter';
 export * from './summarize';
 export * from './eli5';
+export * from './define-this';
+export * from './generate-text';
