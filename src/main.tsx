@@ -89,40 +89,47 @@ function main() {
         }
         // only accept text response for now
         const response = message.content.toString()
+        // label used to identify used prompt
+        const promptLabel = `ai-${name.toLowerCase().replace(/[\s\W]/g, '-')}`;
+        // create tag to identify response from ai
+        const aiTag = `#${promptLabel}`;
 
         switch (output) {
           case PromptOutputType.property: {
             let content = `${tag} | ${block?.content}\n`;
 
-            const propertyName = `ai-${name.toLowerCase().replace(/[\s\W]/g, '-')}`;
+            // use prompt label as the property name
+            content += `${promptLabel}:: `;
             if (!parser) {
               let cleanPropertyResponse = response.replaceAll('\n', ' ');
               cleanPropertyResponse = cleanPropertyResponse.replaceAll('**', '*');
-              content += `${propertyName}:: ${cleanPropertyResponse}`;
+              content += `${cleanPropertyResponse}`;
             } else if (structured) {
-              content += `${propertyName}:: `;
               const record = await parser.parse(response);
               content += Object.entries(record)
                 .map(([key, value]) => `${key}: ${value}`)
                 .join(' ');
             } else if (listed) {
-              content += `${propertyName}:: `;
               const list = (await parser.parse(response)) as string[];
               content += list.join(', ');
             }
 
+            // add property to existing block
             await logseq.Editor.updateBlock(uuid, content);
+            // remove 'generating...' block
             await logseq.Editor.removeBlock(newBlock.uuid)
             break;
           }
           case PromptOutputType.insert: {
+            // tag current block
+            await logseq.Editor.updateBlock(uuid, `${tag}  | ${block?.content}`);
             if (!parser) {
-              await logseq.Editor.updateBlock(newBlock.uuid, `${tag}\n${wrapInQuote(response)}`);
+              await logseq.Editor.updateBlock(newBlock.uuid, `${aiTag}\n${wrapInQuote(response)}`);
             } else if (structured) {
               const record = await parser.parse(response);
               await logseq.Editor.updateBlock(
                 newBlock.uuid,
-                `${tag} | ${block?.content}\n`,
+                `${aiTag} | ${block?.content}\n`,
               );
               for await (const [key, value] of Object.entries(record)) {
                 await logseq.Editor.insertBlock(newBlock.uuid, `${key}: ${value}`);
@@ -130,7 +137,7 @@ function main() {
             } else if (listed) {
               await logseq.Editor.updateBlock(
                 newBlock.uuid,
-                `${tag} | ${block?.content}\n`,
+                `${aiTag} | ${block?.content}\n`,
               );
               const record = (await parser.parse(response)) as string[];
               for await (const item of record) {
@@ -140,7 +147,9 @@ function main() {
             break;
           }
           case PromptOutputType.replace:
-            await logseq.Editor.updateBlock(uuid, `${tag}\n${response}`);
+            // add property to existing block
+            await logseq.Editor.updateBlock(uuid, `${tag} ${aiTag}\n${response}`);
+            // remove 'generating...' block
             await logseq.Editor.removeBlock(newBlock.uuid)
             break;
         }
