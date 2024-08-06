@@ -94,21 +94,25 @@ function main() {
           case PromptOutputType.property: {
             let content = `${tag} | ${block?.content}\n`;
 
+            const propertyName = `ai-${name.toLowerCase().replace(/[\s\W]/g, '-')}`;
             if (!parser) {
-              content += `${name.toLowerCase()}:: ${response}`;
+              let cleanPropertyResponse = response.replaceAll('\n', ' ');
+              cleanPropertyResponse = cleanPropertyResponse.replaceAll('**', '*');
+              content += `${propertyName}:: ${cleanPropertyResponse}`;
             } else if (structured) {
-              content += `${name.toLowerCase()}:: `;
+              content += `${propertyName}:: `;
               const record = await parser.parse(response);
               content += Object.entries(record)
                 .map(([key, value]) => `${key}: ${value}`)
                 .join(' ');
             } else if (listed) {
-              content += `${name.toLowerCase()}:: `;
+              content += `${propertyName}:: `;
               const list = (await parser.parse(response)) as string[];
               content += list.join(', ');
             }
 
             await logseq.Editor.updateBlock(uuid, content);
+            await logseq.Editor.removeBlock(newBlock.uuid)
             break;
           }
           case PromptOutputType.insert: {
@@ -137,6 +141,7 @@ function main() {
           }
           case PromptOutputType.replace:
             await logseq.Editor.updateBlock(uuid, `${tag}\n${response}`);
+            await logseq.Editor.removeBlock(newBlock.uuid)
             break;
         }
       },

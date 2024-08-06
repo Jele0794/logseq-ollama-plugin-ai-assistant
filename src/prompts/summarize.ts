@@ -7,6 +7,7 @@ export const Summarize: IPrompt = {
     """
     {content}
     """
+    Avoid giving any introduction sentence like: "Here is a concise summary of the text".
   `,
-  output: PromptOutputType.insert,
+  output: PromptOutputType.property,
 };
